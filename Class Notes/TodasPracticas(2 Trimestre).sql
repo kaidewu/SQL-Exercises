@@ -27,9 +27,9 @@ select @users, @host;
 /*Practica 15/12/2021*/
 /*
 Como crear procedimientos:
-*(Si usamos aqui USE database tendremos que usar ;)
+*(Si usamos aqui USE database tendremos que usar ';')
 DELIMITER $$
-*(Si usamos aqui USE database tendremos que usar $$)
+*(Si usamos aqui USE database tendremos que usar '$$')
 CREATE PROCEDURE procedimiento_nombre()
 	BEGIN
 		sentencias;
