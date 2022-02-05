@@ -1,0 +1,12 @@
+permisos a usuarios: GRANT (privilegios) ON (Database.Tabla) TO "Usuario" [WITH GRANT OPTIONS(Para poder dar permisos a otros usuarios)]
+	ejemplo:
+		GRANT all privileges ON *.* TO usua1; --> Todos los permisos a usua1 como root
+		GRANT select, update ON practica.* TO usua1; --> usua1 puede leer y actualizar pero no puede dar esos permisos a otros usuarios
+		GRANT select, update ON practica.* TO usua1; --> usua1 puede leer y actualizar y puede estos permisos a otros usuarios
+Otra forma con vistas:
+	CREATE VIEW (nombre de la vista) AS (comando)
+	ejemplo:
+		CREATE VIEW V1 AS select nombre, apellidos from practica.alumnos;
+		GRANT select ON practica.v1 TO usua1;
+Quitar permisos:
+	REVOKE (permisos) ON Database.Table FROM usuarios;
