@@ -84,7 +84,7 @@ DELIMITER ;
 show full processlist; Para ver que procesos hay en ese momento
 CALL ejTrans('7L', '7M', 300);*/
 
-/*Hacer un procedure que tenga 4 parametros donde vamos a meterle el nombre de una base de datos, y los nombres  de las tablas.
+/*Hacer un procedure que tenga 3 parametros donde vamos a meterle el nombre de una base de datos, y el nombre de la tabla y cuantas tablas quieres.
 Tenemos que crear esa base de datos si existe, si no tenemos que anadir las tablas en la base de datos. 
 Si somos root que nos deje crear todo lo anterior pero si no somos root que nos salga un mensaje de que no podemos crear nada*/
 USE practica;
@@ -122,6 +122,8 @@ BEGIN
 				END IF;
             END WHILE;
 		END IF;
+	ELSE
+		SELECT('Porfavor contacte con tu administrador!!!');
     END IF;
 END $$
 DELIMITER ;
