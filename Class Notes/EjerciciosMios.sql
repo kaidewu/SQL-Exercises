@@ -143,19 +143,35 @@ CREATE DATABASE log_completo;
 DROP TABLE log_completo.logmodificados;
 CREATE TABLE log_completo.logmodificados (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 							 usuario VARCHAR(20) NOT NULL,
-                             fecha DATE NOT NULL,
-							 dni_Antiguo VARCHAR(20) NOT NULL,
-                             nombre_Antiguo VARCHAR(50) NOT NULL,
-                             nota_Antiguo INT NOT NULL,
-                             dni_Nuevo VARCHAR(20) NOT NULL,
-                             dni_Nuevo VARCHAR(50) NOT NULL,
-                             nota_Nuevo INT NOT NULL);
+                             fecha DATETIME NOT NULL,
+							 dni_Antiguo VARCHAR(20),
+                             nombre_Antiguo VARCHAR(50),
+                             nota_Antiguo INT,
+                             dni_Nuevo VARCHAR(20),
+                             nombre_Nuevo VARCHAR(50),
+                             nota_Nuevo INT);
 USE practica;
 DELIMITER $$
-DROP TRIGGER IF EXISTS logAll$$
-CREATE TRIGGER logAll AFTER UPDATE ON alumnos2 FOR EACH ROW
+DROP TRIGGER IF EXISTS logModificados$$
+CREATE TRIGGER logModificados AFTER UPDATE ON alumnos2 FOR EACH ROW
 BEGIN
-	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, dni_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old.nota, new.dni, new.nombre, new.nota);
+	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old.nota, new.dni, new.nombre, new.nota);
+END $$
+DROP TRIGGER IF EXISTS logInsertados$$
+CREATE TRIGGER logInsertados BEFORE INSERT ON alumnos2 FOR EACH ROW
+BEGIN
+	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), new.dni, new.nombre, new.nota);
+END $$
+DROP TRIGGER IF EXISTS logElimidos$$
+CREATE TRIGGER logElimidos AFTER DELETE ON alumnos2 FOR EACH ROW
+BEGIN
+	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo) VALUES (user(), now(), old.dni, old.nombre, old.nota);
 END $$
 DELIMITER ;
-UPDATE alumnos2 SET nota = 8;
+
+INSERT alumnos2 VALUES ('1289374F', 'Jose', 6);
+INSERT alumnos2 VALUES ('9826355G', 'Maria', 5);
+INSERT alumnos2 VALUES ('H4CK34DO', 'Hacker', 1234);
+UPDATE alumnos2 SET nota = 8 WHERE nombre = 'Maria';
+DELETE FROM alumnos2 WHERE nota > 10;
+SELECT * FROM log_completo.logmodificados;
