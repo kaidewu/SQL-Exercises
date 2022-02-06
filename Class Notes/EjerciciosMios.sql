@@ -130,4 +130,32 @@ DELIMITER ;
 CALL test ('EjTest', 'test', 3);
 DROP database ejtest;
 
-/*Trigger de cuando no seas root que te diga un mensaje de que te de los permisos necesarios o que lo haga el root.*/
+/* Crear una base de datos con una tabla donde se guardara toda la informacion de las modificaciones hechas en Alumnos2. Y se almacena quien a modificado, fecha y hora, datos antes de la modificacion y despues de la modificacion. 
+CREATE TRIGGER nombre_del_treigger
+	TRIGGER_TIME* TRIGGER_EVENT* ON nombre_de_tabla
+    FOR EACH ROW																									INSERT[new.cosas]
+		[TRIGGER_ORDER*]																							UPDATE[new.cosas y old.cosas]
+	TREIGGER_BODY																									DELETE[old.cosas]
+*TIME = BEDORE|AFTER
+*EVENT = INSERT|UPDATE|DELETE
+*ORDER = FOLLOWS|PRECEDES*/
+CREATE DATABASE log_completo;
+DROP TABLE log_completo.logmodificados;
+CREATE TABLE log_completo.logmodificados (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+							 usuario VARCHAR(20) NOT NULL,
+                             fecha DATE NOT NULL,
+							 dni_Antiguo VARCHAR(20) NOT NULL,
+                             nombre_Antiguo VARCHAR(50) NOT NULL,
+                             nota_Antiguo INT NOT NULL,
+                             dni_Nuevo VARCHAR(20) NOT NULL,
+                             dni_Nuevo VARCHAR(50) NOT NULL,
+                             nota_Nuevo INT NOT NULL);
+USE practica;
+DELIMITER $$
+DROP TRIGGER IF EXISTS logAll$$
+CREATE TRIGGER logAll AFTER UPDATE ON alumnos2 FOR EACH ROW
+BEGIN
+	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, dni_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old.nota, new.dni, new.nombre, new.nota);
+END $$
+DELIMITER ;
+UPDATE alumnos2 SET nota = 8;
