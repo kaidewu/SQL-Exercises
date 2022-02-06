@@ -1,12 +1,13 @@
-/*SET @url = 'https://www.google.es/';
+/**/
+SET @url = 'https://www.google.es/';
 SELECT instr(@url, '/') INTO @posicion;
-First way
+/*First way*/
 SET @dominio1 = right(@url, length(@url) - @posicion - 1);
 SELECT substring(@url, 9, length(@url) - 6);
-Or Second way
-SELECT substring_index('https://www.google.es/', '/', -2);*/
+/*Or Second way*/
+SELECT substring_index('https://www.google.es/', '/', -2);
 
-/*
+/**/
 USE practica;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS exercise $$
@@ -15,9 +16,9 @@ BEGIN
     SELECT user(), current_date();
 END $$
 DELIMITER ;
-CALL exercise();*/
+CALL exercise();
 
-/*Contador de un numero hasta otro numero
+/*Contador de un numero hasta otro numero*/
 USE practica;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS contador $$
@@ -33,9 +34,9 @@ BEGIN
     SELECT total;
 END $$
 DELIMITER ;
-CALL contador(10, 15);*/
+CALL contador(10, 15);
 
-/*Escribe el nombre de la tabla y te dice cuanto filas tiene: 
+/*Escribe el nombre de la tabla y te dice cuanto filas tiene: */
 USE practica;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS contadortablas $$
@@ -45,8 +46,8 @@ BEGIN
 END $$
 DELIMITER ;
 CALL contadortablas('salarios');
-----------------------------------------------------------------------------------------------
-Otro forma de hacer este ejercicio
+/*----------------------------------------------------------------------------------------------
+Otro forma de hacer este ejercicio*/
 USE practica;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS contadortablas $$
@@ -59,9 +60,9 @@ BEGIN
     SELECT CONCAT('LA TABLA ',UPPER(nombretabla), ' TIENE ',@tablas, ' FILAS.');
 END $$
 DELIMITER ;
-CALL contadortablas('salarios');*/
+CALL contadortablas('salarios');
 
-/* Ejercicio de Transaccion
+/* Ejercicio de Transaccion*/
 USE practica;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS ejTrans $$
@@ -75,14 +76,14 @@ BEGIN
 			END;
 	START TRANSACTION;
 		UPDATE cuentas SET saldo = saldo - dinero WHERE codigo = origen;
-        KILL [numero del proceso];
+        /*KILL [numero del proceso];*/
         UPDATE cuentas SET saldo = saldo + dinero WHERE codigo = destino;
     COMMIT;
     SELECT * FROM cuentas;
 END $$
 DELIMITER ;
-show full processlist; Para ver que procesos hay en ese momento
-CALL ejTrans('7L', '7M', 300);*/
+show full processlist; /*Para ver que procesos hay en ese momento*/
+CALL ejTrans('7L', '7M', 300);
 
 /*Hacer un procedure que tenga 3 parametros donde vamos a meterle el nombre de una base de datos, y el nombre de la tabla y cuantas tablas quieres.
 Tenemos que crear esa base de datos si existe, si no tenemos que anadir las tablas en la base de datos. 
