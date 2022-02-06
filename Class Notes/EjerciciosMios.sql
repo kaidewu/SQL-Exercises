@@ -61,23 +61,71 @@ END $$
 DELIMITER ;
 CALL contadortablas('salarios');*/
 
-/**/
-SELECT * FROM cuentas;
+/* Ejercicio de Transaccion
 USE practica;
-DROP PROCEDURE IF EXISTS transaccion;
 DELIMITER $$
-CREATE PROCEDURE transaccion(origen VARCHAR(20), destino VARCHAR(20), dinero DECIMAL(10, 2))
+DROP PROCEDURE IF EXISTS ejTrans $$
+CREATE PROCEDURE ejTrans (origen VARCHAR(20), destino VARCHAR(20), dinero DECIMAL(5,2))
 BEGIN
-	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
-		SHOW ERRORS;
-        SELECT * FROM cuentas;
-	END;
+	DECLARE EXIT HANDLER
+		FOR SQLEXCEPTION
+			BEGIN
+				SHOW ERRORS;
+				ROLLBACK;
+			END;
 	START TRANSACTION;
 		UPDATE cuentas SET saldo = saldo - dinero WHERE codigo = origen;
-        SELECT SLEEP(20);
+        KILL [numero del proceso];
         UPDATE cuentas SET saldo = saldo + dinero WHERE codigo = destino;
     COMMIT;
+    SELECT * FROM cuentas;
 END $$
 DELIMITER ;
-CALL transaccion('7M', '7L', 500.23);
+show full processlist; Para ver que procesos hay en ese momento
+CALL ejTrans('7L', '7M', 300);*/
 
+/*Hacer un procedure que tenga 4 parametros donde vamos a meterle el nombre de una base de datos, y los nombres  de las tablas.
+Tenemos que crear esa base de datos si existe, si no tenemos que anadir las tablas en la base de datos. 
+Si somos root que nos deje crear todo lo anterior pero si no somos root que nos salga un mensaje de que no podemos crear nada*/
+USE practica;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS test $$
+CREATE PROCEDURE test (nameDB VARCHAR(20), tabla VARCHAR(20), numTablas INT)
+BEGIN
+	DECLARE usuario VARCHAR(20);
+    DECLARE contador INT DEFAULT(0);
+    DECLARE nomT VARCHAR(20);
+    SET usuario = SUBSTRING_INDEX(user(), '@', 1);
+    IF (SELECT user FROM mysql.user WHERE user = 'root') = usuario THEN
+		IF NOT EXISTS (SELECT schema_name FROM information_schema.schemata WHERE schema_name = nameDB) THEN
+			SET @nombreDB = CONCAT('CREATE DATABASE ', nameDB,';');
+            PREPARE ejecucion FROM @nombreDB;
+            EXECUTE ejecucion;
+            DEALLOCATE PREPARE ejecucion;
+            WHILE contador < numTablas DO
+				SET contador = contador + 1;
+				SET nomT = CONCAT(tabla, contador);
+				SET @nombreTabla = CONCAT('CREATE TABLE ', nameDB,'.', nomT, ' (id INT, nombre VARCHAR(20));');
+				PREPARE ejecucion FROM @nombreTabla;
+                EXECUTE ejecucion;
+                DEALLOCATE PREPARE ejecucion;
+            END WHILE;
+		ELSE
+			WHILE contador < numTablas DO
+				SET contador = contador + 1;
+				SET nomT = CONCAT(tabla, contador);
+				IF NOT EXISTS (SELECT table_name FROM information_schema.tables WHERE table_schema = nameDB AND table_name = nomT) THEN
+					SET @nombreTabla = CONCAT('CREATE TABLE ', nameDB,'.', nomT, ' (id INT, nombre VARCHAR(20));');
+					PREPARE ejecucion FROM @nombreTabla;
+					EXECUTE ejecucion;
+					DEALLOCATE PREPARE ejecucion;
+				END IF;
+            END WHILE;
+		END IF;
+    END IF;
+END $$
+DELIMITER ;
+CALL test ('EjTest', 'test', 3);
+DROP database ejtest;
+
+/*Trigger de cuando no seas root que te diga un mensaje de que te de los permisos necesarios o que lo haga el root.*/

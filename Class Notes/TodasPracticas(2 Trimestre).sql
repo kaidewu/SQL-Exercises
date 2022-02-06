@@ -297,7 +297,7 @@ CREATE PROCEDURE transaccion (origen VARCHAR(25), destino VARCHAR(25), dinero IN
 		COMMIT;
     END $$
 DELIMITER ;
-
+select * from cuentas;
 call transaccion('7L', '7M', 100);
 /*Procediemiento pasar un nombre de usuario con formato "usuario@maquina" "contraseña". 
 Si no existe el usuario que cree el usuario, si existe el usuario existe que le cambie la contraseña.*/
