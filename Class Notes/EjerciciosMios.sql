@@ -92,7 +92,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS test $$
 CREATE PROCEDURE test (nameDB VARCHAR(20), tabla VARCHAR(20), numTablas INT)
 BEGIN
-	DECLARE usuario VARCHAR(20);
+    DECLARE usuario VARCHAR(20);
     DECLARE contador INT DEFAULT(0);
     DECLARE nomT VARCHAR(20);
     SET usuario = SUBSTRING_INDEX(user(), '@', 1);
