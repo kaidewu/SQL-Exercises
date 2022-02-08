@@ -14,7 +14,7 @@ TRIGGER SYNTAX:
 	    FOR EACH ROW
 		[TRIGGER_ORDER*]
 		TREIGGER_BODY
-	*TIME = BEDORE|AFTER
+	*TIME = BEFORE|AFTER
 	*EVENT = INSERT|UPDATE|DELETE
 	*ORDER = FOLLOWS|PRECEDES
 
@@ -31,8 +31,4 @@ BUCLES SYNTAX:
 Indices:
 	CREATE [UNIQUE] INDEX nombre oN nombretabla
 ---------------------------------------------------------
-AUTOCOMMIT
-Para desactivar el autocommit es: 'SET autocommit = 0;' o 'SET autocommit = off;'
-Y para activar el autocommit es: 'SET autocommit = 1;' o 'SET autocommit = on;' 
-Funciona como un checkpoint, por ejemplo:
-Desactivado: Creo una tabla 'CREATE TABLE prueba (id INT);' y pongo un 'COMMIT;'. Despues añado valores a la tabla 'INSERTO INTO prueba VALUES(1);', y si hago un 'ROLLBACK;', me devuelve al punto de donde estaba antes de poner un 'COMMIT;'.
+
