@@ -36,6 +36,7 @@ Para desactivar el autocommit es: 'SET autocommit = 0;' o 'SET autocommit = off;
 Y para activar el autocommit es: 'SET autocommit = 1;' o 'SET autocommit = on;'
 Funciona como un checkpoint, por ejemplo:
 Desactivado: Creo una tabla 'CREATE TABLE prueba (id INT);' y pongo un 'COMMIT;'. Despues añado valores a la tabla 'INSERTO INTO prueba VALUES(1);', y si hago un 'ROLLBACK;', me devuelve al punto de donde estaba antes de poner un 'COMMIT;'.
+Tambien si esta desactivado el autocommit, solo se podra ver las modificaciones el que este en esa session, es decir, si otro usuario se conecta no podra ver las modificaciones que ha realizado el usuario con el autocommit desactivado.
 ---------------------------------------------------------
 Comprovacion de Errores
 DECLARE "EXIT|CONTINUE" HANDLER FOR "SQL Error"
