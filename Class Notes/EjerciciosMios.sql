@@ -176,3 +176,31 @@ INSERT alumnos2 VALUES ('H4CK34DO', 'Hacker', 1234);
 UPDATE alumnos2 SET nota = 8 WHERE nombre = 'Maria';
 DELETE FROM alumnos2 WHERE nota > 10;
 SELECT * FROM log_completo.logmodificados;
+
+/*Controlador de error*/
+USE practica;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS prueba123 $$
+CREATE PROCEDURE prueba123()
+BEGIN
+	DECLARE EXIT HANDLER
+		FOR SQLEXCEPTION
+		BEGIN
+			SHOW ERRORS;
+		END;
+	SELECT apellidos FROM alumnos2;
+END$$
+DELIMITER ;
+CALL prueba123();
+
+/*Prueba: Controlador de error con triggers [NOTA: NO FUNCIONA EN TRIGGERS]*/
+USE practica;
+DROP TABLE log_completo.log_error;
+CREATE TABLE log_completo.log_error (usuario VARCHAR(20), fecha DATETIME);
+DELIMITER $$
+DROP TRIGGER IF EXISTS log_errores $$
+CREATE TRIGGER log_errores BEFORE UPDATE ON alumnos2 FOR EACH ROW
+BEGIN
+	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old,nota, new.dni, new.nombre, new.nota);
+END$$
+DELIMITER ;
