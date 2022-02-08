@@ -1,22 +1,22 @@
 PROCEDURE SYNTAX:
-*(Si usamos aqui USE database tendremos que usar ';')
-DELIMITER $$
-*(Si usamos aqui USE database tendremos que usar '$$')
-CREATE PROCEDURE procedimiento_nombre()
-	BEGIN
-		sentencias;
-    END $$
-DELIMITER; #Muy importante recuperar el DELIMITER
+	*(Si usamos aqui USE database tendremos que usar ';')
+	DELIMITER $$
+	*(Si usamos aqui USE database tendremos que usar '$$')
+	CREATE PROCEDURE procedimiento_nombre()
+		BEGIN
+			sentencias;
+	    END $$
+	DELIMITER; #Muy importante recuperar el DELIMITER
 ---------------------------------------------------------
 TRIGGER SYNTAX:
-CREATE TRIGGER nombre_del_treigger
-	TRIGGER_TIME* TRIGGER_EVENT* ON nombre_de_tabla
-    FOR EACH ROW
+	CREATE TRIGGER nombre_del_treigger
+		TRIGGER_TIME* TRIGGER_EVENT* ON nombre_de_tabla
+	    FOR EACH ROW
 		[TRIGGER_ORDER*]
-	TREIGGER_BODY
-*TIME = BEDORE|AFTER
-*EVENT = INSERT|UPDATE|DELETE
-*ORDER = FOLLOWS|PRECEDES
+		TREIGGER_BODY
+	*TIME = BEDORE|AFTER
+	*EVENT = INSERT|UPDATE|DELETE
+	*ORDER = FOLLOWS|PRECEDES
 
 -DELETE[old.cosas]
 -UPDATE[new.cosas y old.cosas]
@@ -25,5 +25,9 @@ CREATE TRIGGER nombre_del_treigger
 -AUTO_INCREMENT para incrementar, por ejemplo el ID.
 ---------------------------------------------------------
 BUCLES SYNTAX:
-REPEAT accion UNTIL condicion END REPEAT;
-WHILE condicion DO accion END WHILE;
+	REPEAT accion UNTIL condicion END REPEAT;
+	WHILE condicion DO accion END WHILE;
+---------------------------------------------------------
+Indices:
+	CREATE [UNIQUE] INDEX nombre oN nombretabla
+---------------------------------------------------------
