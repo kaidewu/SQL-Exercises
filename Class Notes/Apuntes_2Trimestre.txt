@@ -29,7 +29,17 @@ BUCLES SYNTAX:
 	WHILE condicion DO accion END WHILE;
 ---------------------------------------------------------
 Indices:
-	CREATE [UNIQUE] INDEX nombre oN nombretabla
+	CREATE [UNIQUE] INDEX nombre ON nombretabla(nombrecolumna[opcional]); /*Para crear un indice*/
+	DROP INDEX nombre ON nombretabla; /*Para eliminar el indice que hemos creado*/
+	SHOW INDEX FROM nombretabla;
+---------------------------------------------------------
+Plan de ejecucion:
+	Estimated execution cost.
+	Estimated number of returned rows.
+	Time to return first row.
+	Time to return all rows (actual cost), in milliseconds.
+	Number of rows returned by the iterator.
+	Number of loops.
 ---------------------------------------------------------
 AUTOCOMMIT
 Para desactivar el autocommit es: 'SET autocommit = 0;' o 'SET autocommit = off;'
@@ -47,3 +57,4 @@ DECLARE "EXIT|CONTINUE" HANDLER FOR "SQL Error"
 	BEGIN
 		[DECLARACION]
 	END;
+---------------------------------------------------------

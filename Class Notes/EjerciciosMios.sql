@@ -154,13 +154,21 @@ CREATE TABLE log_completo.logmodificados (id INT PRIMARY KEY NOT NULL AUTO_INCRE
 USE practica;
 DELIMITER $$
 DROP TRIGGER IF EXISTS logModificados$$
-CREATE TRIGGER logModificados AFTER UPDATE ON alumnos2 FOR EACH ROW
+CREATE TRIGGER logModificados BEFORE UPDATE ON alumnos2 FOR EACH ROW
 BEGIN
+	IF (new.nota > 10) OR (new.nota < 0) THEN
+		SET new.nota = old.nota;
+	END IF;
 	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old.nota, new.dni, new.nombre, new.nota);
 END $$
 DROP TRIGGER IF EXISTS logInsertados$$
 CREATE TRIGGER logInsertados BEFORE INSERT ON alumnos2 FOR EACH ROW
 BEGIN
+	IF new.nota > 10 THEN
+		SET new.nota = 10;
+	ELSEIF new.nota < 0 THEN
+		SET new.nota = 0;
+	END IF;
 	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), new.dni, new.nombre, new.nota);
 END $$
 DROP TRIGGER IF EXISTS logElimidos$$
@@ -170,12 +178,16 @@ BEGIN
 END $$
 DELIMITER ;
 
-INSERT alumnos2 VALUES ('1289374F', 'Jose', 6);
-INSERT alumnos2 VALUES ('9826355G', 'Maria', 5);
-INSERT alumnos2 VALUES ('H4CK34DO', 'Hacker', 1234);
-UPDATE alumnos2 SET nota = 8 WHERE nombre = 'Maria';
+INSERT alumnos2 VALUES ('11239374F', 'Jose', 6);
+INSERT alumnos2 VALUES ('91236355G', 'Maria', 5);
+INSERT alumnos2 VALUES ('H4CasdK34D0', 'Hackasder', 10);
+INSERT alumnos2 VALUES ('asdassssdasd', 'asdsdssd', 11);
+UPDATE alumnos2 SET nota = 11;
 DELETE FROM alumnos2 WHERE nota > 10;
 SELECT * FROM log_completo.logmodificados;
+DROP TABLE alumnos2;
+CREATE TABLE alumnos2 (dni VARCHAR(20) PRIMARY KEY, nombre VARCHAR(20), nota DECIMAL(10,2));
+SELECT * FROM alumnos2;
 
 /*Controlador de error*/
 USE practica;
@@ -204,3 +216,6 @@ BEGIN
 	INSERT INTO log_completo.logmodificados (usuario, fecha, dni_Antiguo, nombre_Antiguo, nota_Antiguo, dni_Nuevo, nombre_Nuevo, nota_Nuevo) VALUES (user(), now(), old.dni, old.nombre, old,nota, new.dni, new.nombre, new.nota);
 END$$
 DELIMITER ;
+
+/*INDEX*/
+SHOW INDEX FROM alumnos2;
